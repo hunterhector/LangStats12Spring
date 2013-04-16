@@ -4,6 +4,7 @@ import re
 import random
 from nltk.model import NgramModel 
 from nltk.probability import GoodTuringProbDist 
+from nltk.probability import LidstoneProbDist 
 
 def main(argv):
     AllWords = []
@@ -31,6 +32,7 @@ def main(argv):
     print str(len(AllWords)) + "\n"
 
     Estim = lambda fdist, bins: GoodTuringProbDist(fdist) 
+    #Estim = lambda fdist, bins: LidstoneProbDist(fdist, 0.2) 
 
     N = 3
     print "Words are read, now let's compute the " + str(N) + "-gram model.\n";
@@ -59,8 +61,10 @@ def main(argv):
   
         # Concatenate all words generated in a string separating them by a space.  
         text = ' '.join([word for word in text_words]);
+        # Sometimes, we got more than one space, have no idea why
+        text = re.sub(r'\s+', ' ', '<s> ' + text + ' </s>');
 
-        outf.write("<s> " + text + " </s>\n")
+        outf.write(text + "\n")
 
 
 if __name__ == '__main__':
