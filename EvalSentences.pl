@@ -3,6 +3,8 @@
 # This script is used to compute average perplexity 
 # For training and testing data.
 #
+use Eval;
+
 sub Usage {
     my $err = shift;
     print "$err\n";
@@ -22,28 +24,21 @@ chomp $TempName;
 my $nSent = 0;
 my $avgPerpl = 0;
 
-# First string will be empty
+my @res = EvalSent($ModelFile, \@sents);
+
+my @PerpArr;
+
 for (my $n = 0; $n < @sents; ++$n) {
-    open T, ">$TempName" or die("Cannot open $TempName for writing.");
-    print T $sents[$n];
-    close T;
-    my $res=`./EvalNGRAM.sh "$TempName" "$ModelFile"`;
-    chomp $res;
-    print "./EvalNGRAM.sh $TempName $ModelFile\n";
-    my $perpl;
-    if ($res =~ /Perplexity = ([0-9.]+),/) {
-        $perpl = $1;
-        $avgPerpl = ($avgPerpl * $nSent + $perpl) / ($nSent + 1);
-        ++$nSent;
-        print "$perpl\n";
-        unlink $TempName or die("Cannot delete a temp file $TempName");
-    } else {
-        print STDERR "Unrecognized output: $res, ignoring setence:\n$sents[$n]\n";
-    }
+    my $perpl = $res[$n];
+    next if (!defined($perpl));
+
+    $avgPerpl = ($avgPerpl * $nSent + $perpl) / ($nSent + 1);
+    ++$nSent;
+    push(@PerpArr, $perpl); 
+    #print "$perpl\n";
 }
 
-print "Perplexity: $avgPerpl nSent = $nSent\n";
-
+print "Perplexity: avg $avgPerpl median ".Median(\@PerpArr)." nSent = $nSent\n";
 
 sub ReadAll {
     my ($nm, $MaxQty) = @_;

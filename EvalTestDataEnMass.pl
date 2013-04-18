@@ -20,20 +20,22 @@ my $SplitDocs = $ARGV[3];
 defined($SplitDocs) or Usage("Specify <Split docs into sentences?>");
 
 my @docs = ReadAll($DocFile, '~~~~~');
+# Delete the first elem, which is empty
+shift @docs;
 my @labs = ReadAll($LabelFile, '\n');
-my $nFake = 0;
-my $nReal = 0;
-my $avgFake = 0;
-my $avgReal = 0;
+
+#die("Read docs #", scalar(@docs), " lab #", scalar(@labs), "\n");
+print "Read docs #", scalar(@docs), " lab #", scalar(@labs), "\n";
+
 
 my @allSent;
 my @allLab;
 
 # First string will be empty
-for (my $n = 1; $n < @docs; ++$n) {
-    my @sents = split(/\n/m, $docs[$n]);
-    my $lab = $labs[$n-1];
+for (my $n = 0; $n < @docs; ++$n) {
+    my $lab = $labs[$n];
     if ($SplitDocs) {
+        my @sents = split(/\n/m, $docs[$n]);
         for my $txt (@sents) {
             next if ($txt =~ /^\s*$/);
             push(@allSent, $txt);
@@ -46,26 +48,35 @@ for (my $n = 1; $n < @docs; ++$n) {
 }
 
 my @res = EvalSent($ModelFile, \@allSent);
+my @FakePerpl;
+my @RealPerpl;
         
-for (my $i; $i < @res; ++$i) {
+for (my $i = 0; $i < @res; ++$i) {
     my $perpl = $res[$i];
     my $lab   = $allLab[$i];
     my $txt   = $allSent[$i];
     next if (!defined($perpl));
 
-    if ($lab) {
-        $avgReal = ($avgReal * $nReal + $perpl) / ($nReal + 1);
-        ++$nReal;
+    if (0 == $lab) {
+        push(@FakePerpl, $perpl);
     } else {
-        $avgFake = ($avgFake * $nFake + $perpl) / ($nFake + 1);
-        ++$nFake;
+        push(@RealPerpl, $perpl);
     }
 
     print "$lab -> $perpl\n";
 }
 
-print "Real: $avgReal nReal = $nReal\n";
-print "Fake: $avgFake nFake = $nFake\n";
+my $nReal = scalar(@RealPerpl);
+my $nFake = scalar(@FakePerpl);
+my $avgReal = Mean(\@RealPerpl);
+my $avgFake = Mean(\@FakePerpl);
+my $stdReal = STD(\@RealPerpl);
+my $stdFake = STD(\@FakePerpl);
+my $medReal = Median(\@RealPerpl);
+my $medFake = Median(\@FakePerpl);
+
+print "REAL mean: $avgReal STD: $stdReal median: $medReal nReal = $nReal\n";
+print "FAKE mean: $avgFake STD: $stdFake median: $medFake nFake = $nFake\n";
 
 
 sub ReadAll {
