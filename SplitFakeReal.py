@@ -17,7 +17,7 @@ parser.add_argument('-r','--real',help='The path to file list')
 
 args = vars(parser.parse_args())
 
-InputFile = args['prefix']
+InputFile = args['input']
 LabelFile = args['labels']
 FakeFile  = args['fake']
 RealFile  = args['real']
@@ -25,17 +25,30 @@ RealFile  = args['real']
 FakeFileOut = open(FakeFile, 'w')
 RealFileOut = open(RealFile, 'w')
 
+InputFileIn = open(InputFile, 'r')
 
 fullDocument = ""
-for line in InputFile.readlines():
+for line in InputFileIn.readlines():
 	fullDocument = fullDocument + line
 
+LabelFileIn = open(LabelFile, 'r')
+
 labels = []
-for line in LabelFile.readlines():
-    labels.append(line)
+for line in LabelFileIn.readlines():
+    labels.append(line.rstrip('\n'))
 
 documents = filter(lambda d: d.strip().rstrip()!="", fullDocument.split("~~~~~"))
 
 print "# of documents ", len(documents)
 print "# of labels ",    len(labels)
 
+if len(documents) != len(labels):
+    raise Exception("# of labels is not equal to # of docs!")
+
+
+for i in range(0,len(labels)):
+    doc = documents[i]
+    if labels[i] == '0':
+        FakeFileOut.write(doc)
+    else:
+        RealFileOut.write(doc)
