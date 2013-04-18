@@ -1,6 +1,43 @@
 sub EvalSent {
-    my ($BinModel, $SentRef) = @_;
+    my ($BinModel, $SentRef, $GetPOSTags) = @_;
     my @Sent = @{$SentRef};
+    
+    my $OrigQty = @Sent;
+
+    if ($GetPOSTags) {
+    # First let's convert it to POS tags
+        $Tmp1=`mktemp`;
+        $Tmp2=`mktemp`;
+
+        chomp $Tmp1;
+        chomp $Tmp2;
+
+        open F1, ">$Tmp1" or die("Cannot open $Tmp1");
+        for my $s (@Sent) {
+            $s =~ s/\n/ /mg;
+            print F1 "$s\n";
+        }
+        close F1;
+
+        0 == system("./POStagger.sh $Tmp1 $Tmp2") or die("POS tagger failed!");
+
+        @Sent = ();
+
+        open F2, "<$Tmp2" or die("Cannot open $Tmp2");
+        while (<F2>) {
+            chomp;
+            push @Sent, $_;
+        }
+        close F2;
+
+        if (@Sent != $OrigQty) {
+            die("The # of retrieved sentences doesn't match the orig #! submitted: $OrigQty retrieved:".scalar(@Sent)); 
+        }
+
+        unlink $Tmp1;
+        unlink $Tmp2;
+    }
+
     my @DelList;
 
     my @res;

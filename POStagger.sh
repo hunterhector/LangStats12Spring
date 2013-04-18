@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# This script converts all words in sentences into respective POS tags.
 # usage: ./stanford-postagger.sh model textFile
 #  e.g., ./stanford-postagger.sh models/english-left3words-distsim.tagger sample-input.txt
 PREFIX="stanford-postagger-2013-04-04"
@@ -41,7 +42,7 @@ fi
 
 # don't want to delete newlines, hence, set -tokenize false 
 
-java -mx300m -cp "$PREFIX/stanford-postagger.jar:" edu.stanford.nlp.tagger.maxent.MaxentTagger -model "$PREFIX/$ModelFile" -textFile "$TmpIn" -tagSeparator "_" -outputFile "$TmpOut" -tokenize false
+java -cp "$PREFIX/stanford-postagger.jar:" edu.stanford.nlp.tagger.maxent.MaxentTagger -model "$PREFIX/$ModelFile" -textFile "$TmpIn" -tagSeparator "_" -outputFile "$TmpOut" -tokenize false
 
 if [ "$?" != "0" ] ; then
     echo "Java tagger failed!"
