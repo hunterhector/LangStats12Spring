@@ -9,15 +9,17 @@ use Eval;
 sub Usage {
     my $err = shift;
     print "$err\n";
-    print STDERR "Usage: <ModelFile> <Document file> <Label File> <Split docs into sentences?>\n";
+    print STDERR "Usage: <ModelFile> <Document file> <Label File> <Get POS tags?>\n";
     exit 1
 }
 
 my $ModelFile = $ARGV[0] or Usage("Specify <Model File>");
 my $DocFile   = $ARGV[1] or Usage("Specify <Doc File>");
 my $LabelFile = $ARGV[2] or Usage("Specify <Label File>");
-my $SplitDocs = $ARGV[3];
-defined($SplitDocs) or Usage("Specify <Split docs into sentences?>");
+my $GetPOSTags = $ARGV[3];
+defined($GetPOSTags) or Usage("Specify <Get POS tags?>");
+
+my $SplitDocs = 0;
 
 my @docs = ReadAll($DocFile, '~~~~~');
 # Delete the first elem, which is empty
@@ -47,7 +49,7 @@ for (my $n = 0; $n < @docs; ++$n) {
     }
 }
 
-my @res = EvalSent($ModelFile, \@allSent);
+my @res = EvalSent($ModelFile, \@allSent, $GetPOSTags);
 my @FakePerpl;
 my @RealPerpl;
         

@@ -13,6 +13,11 @@ if [ "$BinModel" == "" ] ; then
     echo "Specify BinModel"
     exit 1
 fi
+GetPOS=$3
+if [ "$GetPOS" == "" ] ; then
+    echo "Specify GetPOS"
+    exit 1
+fi
 
 BIN="ToolkitBin"
 
@@ -26,5 +31,11 @@ function Perplexity {
     fi
 }
 
-
-Perplexity "$TextFile" "$BinModel"
+if [ "$GetPOS" == "1" ] ; then
+    tmp=`mktemp`
+    ./POStagger.sh $TextFile $tmp
+    Perplexity "$tmp" "$BinModel"
+    rm $tmp
+else
+    Perplexity "$TextFile" "$BinModel"
+fi

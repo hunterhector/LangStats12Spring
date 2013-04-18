@@ -23,30 +23,30 @@ if [ "$N" == "" ] ; then
     echo "Specify N"
     exit 1
 fi
-CutOffs=""
-CN=1
-if [ "$N" == "2" ] ; then
-    CutOffs="$CN"
-fi
-if [ "$N" == "3" ] ; then
-    CutOffs="$CN $CN"
-fi
-if [ "$N" == "4" ] ; then
-    CutOffs="$CN $CN $CN"
-fi
-if [ "$N" == "5" ] ; then
-    CutOffs="$CN $CN $CN $CN"
-fi
-if [ "$N" == "6" ] ; then
-    CutOffs="$CN $CN $CN $CN $CN"
-fi
-if [ "$N" == "7" ] ; then
-    CutOffs="$CN $CN $CN $CN $CN $CN"
-fi
-if [ "$N" -gt "7" ] ; then
-    echo "N > 7 is not supported!"
-    exit 1
-fi
+#CutOffs=""
+#CN=1
+#if [ "$N" == "2" ] ; then
+#    CutOffs="$CN"
+#fi
+#if [ "$N" == "3" ] ; then
+#    CutOffs="$CN $CN"
+#fi
+#if [ "$N" == "4" ] ; then
+#    CutOffs="$CN $CN $CN"
+#fi
+#if [ "$N" == "5" ] ; then
+#    CutOffs="$CN $CN $CN $CN"
+#fi
+#if [ "$N" == "6" ] ; then
+#    CutOffs="$CN $CN $CN $CN $CN"
+#fi
+#if [ "$N" == "7" ] ; then
+#    CutOffs="$CN $CN $CN $CN $CN $CN"
+#fi
+#if [ "$N" -gt "7" ] ; then
+#    echo "N > 7 is not supported!"
+#    exit 1
+#fi
 OutPref="$OutPref-N$N"
 BIN="ToolkitBin"
 TempVocab=`mktemp`

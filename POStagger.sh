@@ -34,12 +34,27 @@ TmpOut=`mktemp`
 # First delete <s> & </s>
 cat "$InputFile" |sed -r 's|</?s>||g' > $TmpIn
 
+if [ "$?" != "0" ] ; then
+    echo "cat failed!"
+    exit 1
+fi
+
 # don't want to delete newlines, hence, set -tokenize false 
 
 java -mx300m -cp "$PREFIX/stanford-postagger.jar:" edu.stanford.nlp.tagger.maxent.MaxentTagger -model "$PREFIX/$ModelFile" -textFile "$TmpIn" -tagSeparator "_" -outputFile "$TmpOut" -tokenize false
 
+if [ "$?" != "0" ] ; then
+    echo "Java tagger failed!"
+    exit 1
+fi
+
 # Get rid of the words, need only POS tags
 cat $TmpOut | sed -r 's/(^|\s+)[^_]+_/ /g' | sed "s/^/<s> /" |sed "s|$| </s>|" | sed "s|\s+| |g" > $OutFile
+
+if [ "$?" != "0" ] ; then
+    echo "cat/sed failed!"
+    exit 1
+fi
 
 rm $TmpOut
 rm $TmpIn
