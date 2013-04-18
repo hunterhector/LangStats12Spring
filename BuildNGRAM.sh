@@ -23,26 +23,27 @@ if [ "$N" == "" ] ; then
     echo "Specify N"
     exit 1
 fi
-CutOffs=""
-if [ "$N" == "2" ] ; then
-    CutOffs="3"
-fi
-if [ "$N" == "3" ] ; then
-    CutOffs="3 3"
-fi
-if [ "$N" == "4" ] ; then
-    CutOffs="3 3 3"
-fi
-if [ "$N" == "5" ] ; then
-    CutOffs="3 3 3 3"
-fi
-if [ "$N" == "6" ] ; then
-    CutOffs="3 3 3 3 3"
-fi
-if [ "$N" -gt "6" ] ; then
-    echo "N > 6 is not supported!"
-    exit 1
-fi
+# Cut offs seem to be detrimental
+#CutOffs=""
+#if [ "$N" == "2" ] ; then
+#    CutOffs="1"
+#fi
+#if [ "$N" == "3" ] ; then
+#    CutOffs="1 1"
+#fi
+#if [ "$N" == "4" ] ; then
+#    CutOffs="1 1 1"
+#fi
+#if [ "$N" == "5" ] ; then
+#    CutOffs="1 1 1 1"
+#fi
+#if [ "$N" == "6" ] ; then
+#    CutOffs="1 1 1 1 1"
+#fi
+#if [ "$N" -gt "6" ] ; then
+#    echo "N > 6 is not supported!"
+#    exit 1
+#fi
 OutPref="$OutPref-N$N"
 BIN="ToolkitBin"
 TempVocab=`mktemp`
@@ -59,7 +60,7 @@ if [ "$?" != 0 ] ; then
     exit 1
 fi
 echo "idngram-file is created N=$N"
-$BIN/idngram2lm -n $N -context cue.ccs -idngram $TempNgram -vocab $TempVocab  -four_byte_counts -good_turing -arpa $OutPref.arpa -calc_mem -binary $OutPref.binlm -cutoffs $CutOffs
+$BIN/idngram2lm -n $N -context cue.ccs -idngram $TempNgram -vocab $TempVocab  -four_byte_counts -good_turing -calc_mem -binary $OutPref.binlm #-cutoffs $CutOffs #-arpa $OutPref.arpa 
 if [ "$?" != 0 ] ; then
     echo "idngram2lm failed!"
     exit 1

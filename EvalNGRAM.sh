@@ -19,7 +19,7 @@ BIN="ToolkitBin"
 function Perplexity {
     text=$1
     bin=$2
-    echo "perplexity -text  $text" | $BIN/evallm -binary $bin  -context cue.css 2>&1| grep Perplexity
+    echo "perplexity -text  $text" | $BIN/evallm -binary $bin  -context cue.ccs 2>&1| grep Perplexity
     if [ "$?" != 0 ] ; then
         echo "evallm failed!"
         exit 1
