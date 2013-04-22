@@ -44,12 +44,16 @@ for (my $n = 0; $n < $DocQty; ++$n) {
     my $lab = $labs[$n];
     
     my @words = split(/[\n\s]+/m, $docs[$n]);
+    my $unkQty = 0;
+    for my $w (@words) {
+        $unkQty++ if ($w eq "<UNK>");
+    }
     my @tmps  = split(/\n/m,     $docs[$n]);
     my $WordQty = @words;
     my $SentQty = @tmps;
     push(@WordQtys, $WordQty);
     $TotSentQty += $SentQty;
-    #print "$n -> $SentQty $WordQty\n";
+    print "$lab -> $SentQty $WordQty ".($unkQty/$WordQty)."\n";
     push(@allSent, $docs[$n]);
     push(@allLab, $lab);
 }
