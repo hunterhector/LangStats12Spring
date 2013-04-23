@@ -68,7 +68,7 @@ sub EvalSent {
     while (<P>) {
         chomp;
         my $line = $_;
-        my $perpl = undef;
+        my $perpl = 0;
         ++$n;
         if ($line =~ /Perplexity = ([0-9.]+),/) {
             $perpl = $1;
