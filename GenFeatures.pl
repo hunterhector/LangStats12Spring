@@ -1,7 +1,6 @@
 #!/usr/bin/perl -w
 #
-# This script is used to compute average perplexity 
-# for data in the target format (docs separated by ~~~~~)
+# This script is used to compute features.
 #
 use Eval;
 
@@ -32,6 +31,7 @@ print "Read docs #", scalar(@docs), " lab #", scalar(@labs), "\n";
 
 my @allSent;
 my @allLab;
+my @allUnkQty;
 
 my $TotSentQty = 0;
 
@@ -56,11 +56,12 @@ for (my $n = 0; $n < $DocQty; ++$n) {
     print "$lab -> $SentQty $WordQty ".($unkQty/$WordQty)."\n";
     push(@allSent, $docs[$n]);
     push(@allLab, $lab);
+    push(@allUnkQty, $unkQty);
 }
 
 print "Overall # of sentences: $TotSentQty\n";
 
-my @FeatureNames = ("Label", "WordQty");
+my @FeatureNames = ("Label", "WordQty", "UnkQty");
 my @ModelResRef;
 
 for (my $i = 3; $i + 2 <= $#ARGV; $i += 3) {
@@ -82,7 +83,7 @@ open O, ">$OutFile" or die("Cannot open $OutFile for writing!");
 print O join(",", @FeatureNames)."\n"; 
 
 for (my $j = 0; $j < $DocQty; ++$j) {
-    my @vals = ($labs[$j], $WordQtys[$j]);
+    my @vals = ($labs[$j], $WordQtys[$j], $allUnkQty[$j]);
 
     for (my $k = 0; $k < @ModelResRef; ++$k) {
         push(@vals, $ModelResRef[$k]->[$j]);
