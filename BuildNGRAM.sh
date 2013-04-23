@@ -49,10 +49,14 @@ if [ "$N" == "7" ] ; then
 fi
 CN=4
 if [ "$N" == "8" ] ; then
-    CutOffs="-cutoffs $CN $CN $CN $CN $CN $CN"
+    CutOffs="-cutoffs $CN $CN $CN $CN $CN $CN $CN"
 fi
-if [ "$N" -gt "8" ] ; then
-    echo "N > 7 is not supported!"
+CN=5
+if [ "$N" == "9" ] ; then
+    CutOffs="-cutoffs $CN $CN $CN $CN $CN $CN $CN $CN"
+fi
+if [ "$N" -gt "9" ] ; then
+    echo "N > 9 is not supported!"
     exit 1
 fi
 OutPref="$OutPref-N$N"
