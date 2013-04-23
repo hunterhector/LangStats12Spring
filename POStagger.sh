@@ -42,7 +42,7 @@ fi
 
 # don't want to delete newlines, hence, set -tokenize false 
 
-java -cp "$PREFIX/stanford-postagger.jar:" edu.stanford.nlp.tagger.maxent.MaxentTagger -model "$PREFIX/$ModelFile" -textFile "$TmpIn" -tagSeparator "_" -outputFile "$TmpOut" -tokenize false
+java -server -cp "$PREFIX/stanford-postagger.jar:" edu.stanford.nlp.tagger.maxent.MaxentTagger -model "$PREFIX/$ModelFile" -textFile "$TmpIn" -tagSeparator "_" -outputFile "$TmpOut" -tokenize false
 
 if [ "$?" != "0" ] ; then
     echo "Java tagger failed!"

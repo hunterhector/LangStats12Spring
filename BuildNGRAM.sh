@@ -23,30 +23,38 @@ if [ "$N" == "" ] ; then
     echo "Specify N"
     exit 1
 fi
-#CutOffs=""
-#CN=1
-#if [ "$N" == "2" ] ; then
-#    CutOffs="$CN"
-#fi
-#if [ "$N" == "3" ] ; then
-#    CutOffs="$CN $CN"
-#fi
-#if [ "$N" == "4" ] ; then
-#    CutOffs="$CN $CN $CN"
-#fi
-#if [ "$N" == "5" ] ; then
-#    CutOffs="$CN $CN $CN $CN"
-#fi
-#if [ "$N" == "6" ] ; then
-#    CutOffs="$CN $CN $CN $CN $CN"
-#fi
-#if [ "$N" == "7" ] ; then
-#    CutOffs="$CN $CN $CN $CN $CN $CN"
-#fi
-#if [ "$N" -gt "7" ] ; then
-#    echo "N > 7 is not supported!"
-#    exit 1
-#fi
+CutOffs=""
+if [ "$N" == "2" ] ; then
+    CutOffs=""
+fi
+CN=2
+if [ "$N" == "3" ] ; then
+    CutOffs="-cutoffs $CN3 $CN3"
+fi
+CN=2
+if [ "$N" == "4" ] ; then
+    CutOffs="-cutoffs $CN $CN $CN"
+fi
+CN=3
+if [ "$N" == "5" ] ; then
+    CutOffs="-cutoffs $CN $CN $CN $CN"
+fi
+CN=3
+if [ "$N" == "6" ] ; then
+    CutOffs="-cutoffs $CN $CN $CN $CN $CN"
+fi
+CN=3
+if [ "$N" == "7" ] ; then
+    CutOffs="-cutoffs $CN $CN $CN $CN $CN $CN"
+fi
+CN=4
+if [ "$N" == "8" ] ; then
+    CutOffs="-cutoffs $CN $CN $CN $CN $CN $CN"
+fi
+if [ "$N" -gt "8" ] ; then
+    echo "N > 7 is not supported!"
+    exit 1
+fi
 OutPref="$OutPref-N$N"
 BIN="ToolkitBin"
 TempVocab=`mktemp`
@@ -63,7 +71,7 @@ if [ "$?" != 0 ] ; then
     exit 1
 fi
 echo "idngram-file is created N=$N"
-$BIN/idngram2lm -n $N -context cue.ccs -idngram $TempNgram -vocab $TempVocab  -four_byte_counts -good_turing -calc_mem -binary $OutPref.binlm #-cutoffs $CutOffs #-arpa $OutPref.arpa 
+$BIN/idngram2lm -n $N -context cue.ccs -idngram $TempNgram -vocab $TempVocab  -four_byte_counts -good_turing -calc_mem -binary $OutPref.binlm $CutOffs #-arpa $OutPref.arpa 
 if [ "$?" != 0 ] ; then
     echo "idngram2lm failed!"
     exit 1
