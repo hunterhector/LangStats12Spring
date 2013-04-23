@@ -29,7 +29,7 @@ if [ "$N" == "2" ] ; then
 fi
 CN=2
 if [ "$N" == "3" ] ; then
-    CutOffs="-cutoffs $CN3 $CN3"
+    CutOffs="-cutoffs $CN $CN"
 fi
 CN=2
 if [ "$N" == "4" ] ; then
