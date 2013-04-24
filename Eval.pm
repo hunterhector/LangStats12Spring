@@ -89,6 +89,45 @@ sub EvalSent {
     return @res;
 }
 
+sub GenSent {
+    my ($BinModel, $len) = @_;
+
+    my @DelList;
+
+    my $MainTempName = `mktemp`;
+    chomp $MainTempName;
+    push(@DelList, $MainTempName);
+
+    open MT, ">$MainTempName" or die("Cannot open $MainTempName for writing.");
+
+    
+    my $TempName = `mktemp`;
+    chomp $TempName;
+
+    open T, ">$TempName" or die("Cannot open $TempName for writing.");
+    print T $txt;
+    close T;
+
+    # Generate length doesn't include the starting and the final tag.
+    my $len2 = $len - 2;
+
+    $len2 > 0 or die("$len is too short to be a sent length!");
+
+    print MT "generate -text $TempName -size $len2 -seed ".time()." \n";
+    close MT;
+
+    0 == system("cat $MainTempName|ToolkitBin/evallm  -binary $BinModel  -context cue.ccs 2>&1") or die("Cannot generate fake sentences!");
+
+    my $t = `cat $TempName`;
+    chomp $t;
+    my $res =  "<s> $t</s>";
+
+    unlink($TempName) or die("Cannot delete $TempName");
+    unlink($MainTempName) or die("Cannot delete $MainTempName");
+
+    return $res;
+}
+
 sub Median {
     my $ArrRef = shift;
 
