@@ -15,8 +15,7 @@ if [ "$BinModel" == "" ] ; then
 fi
 GetPOS=$3
 if [ "$GetPOS" == "" ] ; then
-    echo "Specify GetPOS"
-    exit 1
+    GetPOS="0"
 fi
 
 BIN="ToolkitBin"
