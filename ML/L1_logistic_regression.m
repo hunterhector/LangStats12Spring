@@ -69,4 +69,4 @@ disp(precision_model(1:T,index))
 display('accuracy:')
 display(mean(precision_model(1:T,index)))
 display('probablity:')
-diaplay(prob);
+display(prob);

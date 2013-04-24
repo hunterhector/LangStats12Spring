@@ -1,8 +1,10 @@
 addpath('liblinear');
 data_org =importdata('training.csv');
+%data_org =importdata('trainingExt.csv');
 data = data_org.data(:,2:end);
 label = data_org.data(:,1);
 data_dev_org = importdata('development.csv');
+%data_dev_org = importdata('add.csv');
 data_dev = data_dev_org.data(:,2:end);
 label_dev = data_dev_org.data(:,1);
 T = 10;
@@ -24,7 +26,7 @@ for time = 1:T
 %%svm classifier        
         model = {train(train_label,sparse(train_data), svm_option)};        
         weight(i,:) = model{1}.w;
-        save model model ; %% save model if you wnat to load it just use
+        %save model model ; %% save model if you wnat to load it just use
         %load model;
         y = zeros(size(test_data,1),1);
         Y_test = predict(y, sparse(test_data),model{1});
@@ -56,6 +58,7 @@ svm_option = ['-c ',num2str(para)];
 
 %%svm classifier        
 model = {train(label,sparse(data), svm_option)};        
+save model model ; %% save model if you wnat to load it just use
 weight(i,:) = model{1}.w;
 y = zeros(size(test_data,1),1);
 Y_test = predict(label_dev, sparse(data_dev),model{1});
