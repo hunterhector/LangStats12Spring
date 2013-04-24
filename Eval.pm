@@ -62,7 +62,7 @@ sub EvalSent {
 
     close MT;
 
-    open P, "cat $MainTempName|ToolkitBin/evallm  -binary $BinModel  -context cue.ccs 2>&1| grep Perplexity|" or die("Cannot open the pipe!");
+    open P, "cat $MainTempName|ToolkitBin/evallm  -binary $BinModel  -context cue.ccs | grep Perplexity|" or die("Cannot open the pipe!");
 
     my $n = 0;
     while (<P>) {
@@ -112,7 +112,7 @@ sub GenSent {
     print MT "generate -text $TempName -size $len2 -seed ".time()." \n";
     close MT;
 
-    0 == system("cat $MainTempName|ToolkitBin/evallm  -binary $BinModel  -context cue.ccs 2>&1") or die("Cannot generate fake sentences!");
+    0 == system("cat $MainTempName|ToolkitBin/evallm  -binary $BinModel  -context cue.ccs ") or die("Cannot generate fake sentences!");
 
     my $t = `cat $TempName`;
     chomp $t;
