@@ -12,16 +12,17 @@ srand(time());
 sub Usage {
     my $err = shift;
     print "$err\n";
-    print STDERR "Usage: <Example File> <Label File> <Binary Lang Model> <Real Sentence File> <Out File> <Out Label File>\n";
+    print STDERR "Usage: <Example File> <Label File> <# of repeatitions> <Binary Lang Model> <Real Sentence File> <Out File> <Out Label File>\n";
     exit 1
 }
 
 my $ExFile          = $ARGV[0] or Usage("Specify <Example File>");
 my $LabelFile       = $ARGV[1] or Usage("Specify <Label File>");
-my $BinLangModel    = $ARGV[2] or Usage("Specify <Binary Lang Model>");
-my $RealSentFile    = $ARGV[3] or Usage("Specify <Real Sentence File>");
-my $OutFile         = $ARGV[4] or Usage("Specify <Out File>");
-my $OutLabelFile    = $ARGV[5] or Usage("Specify <Out Label File>");
+my $NumRep          = $ARGV[2] or Usage("Specify <# of repetitions>");
+my $BinLangModel    = $ARGV[3] or Usage("Specify <Binary Lang Model>");
+my $RealSentFile    = $ARGV[4] or Usage("Specify <Real Sentence File>");
+my $OutFile         = $ARGV[5] or Usage("Specify <Out File>");
+my $OutLabelFile    = $ARGV[6] or Usage("Specify <Out Label File>");
 
 my $qty = @ARGV;
 
@@ -42,6 +43,8 @@ $|=1;
 open(OD, ">$OutFile") or die("Cannot open output data file for writing!");
 open(OL, ">$OutLabelFile") or die("Cannot open output label file for writing!");
 
+for (my $tt = 0; $tt < $NumRep; ++$tt) {
+print "Repeat. ".($tt+1)." out of $NumRep\n";
 for (my $n = 0; $n < @docs; ++$n) {
     my $lab = $labs[$n];
 
@@ -97,6 +100,7 @@ for (my $n = 0; $n < @docs; ++$n) {
     $txt =~ s|^\s+<s>|<s>|gm;
 
     print OD "$DocSep\n$txt";
+}
 }
 
 close OD or die("cannot close data");

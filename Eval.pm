@@ -70,7 +70,7 @@ sub EvalSent {
         my $line = $_;
         my $perpl = 0;
         ++$n;
-        if ($line =~ /Perplexity = ([0-9.]+),/) {
+        if ($line =~ /Perplexity = ([0-9.]+)[,a-z]/i) {
             $perpl = $1;
         } else {
             print STDERR "Cannot parse perplexity in line $n! Got: $line\n";
