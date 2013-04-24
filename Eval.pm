@@ -104,10 +104,6 @@ sub GenSent {
     my $TempName = `mktemp`;
     chomp $TempName;
 
-    open T, ">$TempName" or die("Cannot open $TempName for writing.");
-    print T $txt;
-    close T;
-
     # Generate length doesn't include the starting and the final tag.
     my $len2 = $len - 2;
 

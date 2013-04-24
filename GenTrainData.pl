@@ -93,7 +93,10 @@ for (my $n = 0; $n < @docs; ++$n) {
 
     print "Generated ".($n+1)." out of ".@docs."\n";
 
-    print OD "$DocSep\n$txt\n";
+    $txt =~ s|</s>|</s>\n|gm;
+    $txt =~ s|^\s+<s>|<s>|gm;
+
+    print OD "$DocSep\n$txt";
 }
 
 close OD or die("cannot close data");
