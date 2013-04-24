@@ -24,6 +24,8 @@ for time = 1:T
 %%svm classifier        
         model = {train(train_label,sparse(train_data), svm_option)};        
         weight(i,:) = model{1}.w;
+        save model model ; %% save model if you wnat to load it just use
+        %load model;
         y = zeros(size(test_data,1),1);
         Y_test = predict(y, sparse(test_data),model{1});
         precision_model(time,i) =  nnz(Y_test == test_label)/size(test_data,1);
