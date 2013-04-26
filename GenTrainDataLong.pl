@@ -61,9 +61,9 @@ for (my $n = 0; $n < @docs; ++$n) {
     
     my @tmps  = split(/\n/m, $docs[$n]);
     #my $SentQty = @tmps;
-    my $SentQty = @tmps + $AddLen;
+    my $SentQty = @tmps;
     @tmps  = split(/\s+/m,   $docs[$n]);
-    my $WordQty = @tmps;
+    my $WordQty = @tmps + $AddLen;
 
     my $txt = "";
     
