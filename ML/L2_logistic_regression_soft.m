@@ -1,11 +1,9 @@
 clear;
 addpath('liblinear');
-data_org =importdata('training.csv');
+data_org =importdata('../Features/LongFeat_trainingAddLong.csv');
+%data_org =importdata('../Features/LongFeat_training.csv');
 data = data_org.data(:,2:end);
 label = data_org.data(:,1);
-data_dev_org = importdata('development.csv');
-data_dev = data_dev_org.data(:,2:end);
-label_dev = data_dev_org.data(:,1);
 T = 10;
 N = size(data,1);
 aa = randperm(N);
@@ -46,15 +44,32 @@ svm_option = ['-c ',num2str(para),' -s 7'];
 model = {train(label,sparse(data), svm_option)};        
 weight(i,:) = model{1}.w;
 %prob = data_dev *model{1}.w';
-save L1_model model;
-%load L1_model;
-y = zeros(size(test_data,1),1);
-[Y_test,accuracy,prob] = predict(label_dev, sparse(data_dev),model{1},'-b 1');
-%%smoothing
-prob = max(prob, ones(size(prob)) * smooth_para);
-logliklihood= mean(log(prob(:,1).^(1-Y_test))+log(prob(:,2).^ Y_test));
-precision_dev =  nnz(Y_test == label_dev)/size(data_dev,1);
-%%developset
-disp(logliklihood);
-%avg_precision = mean(precision_fold);
-disp(precision_dev);
+save '../production/L2_model' model;
+%load L2_model;
+
+for d=1:2
+    if d == 1
+        DevFile = '../Features/LongFeat_development.csv'
+    else
+        DevFile = '../Features/LongFeat_developmentAdd.csv'
+    end
+    data_dev_org = importdata(DevFile);
+    data_dev = data_dev_org.data(:,2:end);
+    label_dev = data_dev_org.data(:,1);
+
+    [Y_test,accuracy,prob] = predict(label_dev, sparse(data_dev),model{1},'-b 1');
+    %%smoothing
+    prob = max(prob, ones(size(prob)) * smooth_para);
+    logliklihood= mean(log(prob(:,1).^(1-Y_test))+log(prob(:,2).^ Y_test));
+    precision_dev =  nnz(Y_test == label_dev)/size(data_dev,1);
+    %%developset
+
+    disp(['File: ', DevFile])
+    disp('Log-lik:')
+    disp(logliklihood);
+    disp('Avg-prob:')
+    disp(exp(logliklihood));
+    %avg_precision = mean(precision_fold);
+    disp('prec dev');
+    disp(precision_dev);
+end
