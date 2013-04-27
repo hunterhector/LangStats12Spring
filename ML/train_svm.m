@@ -50,6 +50,7 @@ disp('==================');
 disp(precision);
 [value,index] = max(precision);
 para = 10^(index-n_para/2);
+disp(['Max params, index =', num2str(index), ' para=', num2str(para)])
 svm_option = ['-c ',num2str(para)];
 
 %%svm classifier        
