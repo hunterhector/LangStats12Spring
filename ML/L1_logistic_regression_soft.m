@@ -28,6 +28,7 @@ for time = 1: T %T %1
         %smoothing;
         prob = max(prob_org, ones(size(prob_org)) * smooth_para);
         logliklihood_model(time,i)= mean(log(prob(:,1).^(1-Y_test))+log(prob(:,2).^ Y_test));
+        %logliklihood_model(time,i)= mean(log(prob(:,1).^(1-test_label))+log(prob(:,2).^ test_label));
     end
 end
 %precision = sum(precision_model);
@@ -63,6 +64,7 @@ for d=1:2
     %%smoothing
     prob = max(prob, ones(size(prob)) * smooth_para);
     logliklihood= mean(log(prob(:,1).^(1-Y_test))+log(prob(:,2).^ Y_test));
+    %logliklihood= mean(log(prob(:,1).^(1-label_dev))+log(prob(:,2).^ label_dev));
     precision_dev =  nnz(Y_test == label_dev)/size(data_dev,1);
     %%developset
 
