@@ -11,9 +11,9 @@ echo '' > program.log
 echo '' > error.log
 echo '' > matlab.log
 
-python preprocessor.py < developmentSet.dat >> program.log 2>>error.log
-python genLMFeature.py >> program.log 2>>error.log 
+python preprocessor.py < developmentSet.dat
+python genLMFeature.py 
 
-matlab -nodesktop -nosplash -r "run('classify');exit" >> matlab.log 2>>error.log
+matlab -nodesktop -nosplash -r "run('classify');exit"
 
 cat result

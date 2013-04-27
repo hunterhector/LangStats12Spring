@@ -64,6 +64,13 @@ for line in fileList:
 	
 		per =  matches[0] if (len(matches) > 0)	else 100
 		
+		per = 100
+
+		if (len(matches) > 0):
+			per = matches[0]
+		else:
+			print >> sys.stderr, 'Cannot find perplexity for '+line			
+
 		if n in shortSet:		
 			print >> shortFeatureOut, per,
 		print >> longFeatureOut,per,
