@@ -1,13 +1,8 @@
 addpath('liblinear');
-data_org =importdata('training.csv');
-%data_org =importdata('trainingExt.csv');
+data_org =importdata('../Features/ShortFeat_trainingAddLong.csv');
+%data_org =importdata('../Features/ShortFeat_training.csv');
 data = data_org.data(:,2:end);
 label = data_org.data(:,1);
-%data_dev_org = importdata('developmentAdd.csv');
-data_dev_org = importdata('development.csv');
-%data_dev_org = importdata('add.csv');
-data_dev = data_dev_org.data(:,2:end);
-label_dev = data_dev_org.data(:,1);
 T = 10;
 N = size(data,1);
 aa = randperm(N);
@@ -59,16 +54,32 @@ svm_option = ['-c ',num2str(para)];
 
 %%svm classifier        
 model = {train(label,sparse(data), svm_option)};        
-save model model ; %% save model if you wnat to load it just use
-weight(i,:) = model{1}.w;
-y = zeros(size(test_data,1),1);
-Y_test = predict(label_dev, sparse(data_dev),model{1});
-precision_dev =  nnz(Y_test == label_dev)/size(data_dev,1);
+save '../production/HardModel' model; %% save model if you wnat to load it just use
+%weight(i,:) = model{1}.w;
+%y = zeros(size(test_data,1),1);
 
-%avg_precision = mean(precision_fold);
-
-disp(precision_dev);
 display('Cross-validation:')
 disp(precision_model(1:T,index))
 display('accuracy:')
-display(mean(precision_model(1:T,index)))
+display(mean(precision_model(1:T,index))) 
+for d=1:2
+    if d == 1
+        DevFile = '../Features/ShortFeat_development.csv'
+    else
+        DevFile = '../Features/ShortFeat_developmentAdd.csv'
+    end
+        
+    data_dev_org = importdata(DevFile);
+    data_dev = data_dev_org.data(:,2:end);
+    label_dev = data_dev_org.data(:,1);
+
+
+    Y_test = predict(label_dev, sparse(data_dev),model{1});
+    precision_dev =  nnz(Y_test == label_dev)/size(data_dev,1);
+
+%avg_precision = mean(precision_fold);
+
+    disp(['File: ', DevFile])
+    disp(precision_dev);
+end
+

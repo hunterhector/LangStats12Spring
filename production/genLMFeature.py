@@ -46,8 +46,8 @@ longFeatureOut =open(featurePath+'/flong.csv','w')
 shortSet = set( [3,4] )
 longSet = set( [2,3,4,5,6,7] )
 
-print >> shortFeatureOut, 'Label,W3,W4'
-print >> longFeatureOut, 'Label,W2,W3,W4,W5,W6,W7'
+print >> shortFeatureOut, 'W3,W4'
+print >> longFeatureOut, 'W2,W3,W4,W5,W6,W7'
 
 fileList = open(filelist)
 
