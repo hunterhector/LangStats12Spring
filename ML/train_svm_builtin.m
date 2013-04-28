@@ -1,6 +1,6 @@
-%data_org =importdata('../Features/LongFeat_trainingAddLong.csv');
+data_org =importdata('../Features/LongFeat_trainingAddLong.csv');
 %data_org =importdata('../Features/LongFeat_training.csv');
-data_org =importdata('../Features/ShortFeat_trainingAddLong.csv');
+%data_org =importdata('../Features/ShortFeat_trainingAddLong.csv');
 %data_org =importdata('../Features/ShortFeat_training.csv');
 data = data_org.data(:,2:end);
 label = data_org.data(:,1);
@@ -12,7 +12,7 @@ n_para = 5;
 
 options = optimset('maxiter',100000);
 
-C = 100000
+C = 10000
 
 for time = 1:T
     disp(time);
@@ -75,11 +75,11 @@ display('accuracy:')
 display(mean(precision_model(1:T,index))) 
 for d=1:2
     if d == 1
-        DevFile = '../Features/ShortFeat_development.csv'
-        %DevFile = '../Features/LongFeat_development.csv'
+        %DevFile = '../Features/ShortFeat_development.csv'
+        DevFile = '../Features/LongFeat_development.csv'
     else
-        DevFile = '../Features/ShortFeat_developmentAdd.csv'
-        %DevFile = '../Features/LongFeat_developmentAdd.csv'
+        %DevFile = '../Features/ShortFeat_developmentAdd.csv'
+        DevFile = '../Features/LongFeat_developmentAdd.csv'
     end
         
     data_dev_org = importdata(DevFile);
