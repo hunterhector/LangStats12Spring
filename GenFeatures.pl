@@ -61,7 +61,8 @@ for (my $n = 0; $n < $DocQty; ++$n) {
 
 print "Overall # of sentences: $TotSentQty\n";
 
-my @FeatureNames = ("Label", "WordQty", "UnkQty");
+#my @FeatureNames = ("Label", "WordQty", "UnkQty");
+my @FeatureNames = ("Label");
 my @ModelResRef;
 
 for (my $i = 3; $i + 2 <= $#ARGV; $i += 3) {
@@ -83,7 +84,8 @@ open O, ">$OutFile" or die("Cannot open $OutFile for writing!");
 print O join(",", @FeatureNames)."\n"; 
 
 for (my $j = 0; $j < $DocQty; ++$j) {
-    my @vals = ($labs[$j], $WordQtys[$j], $allUnkQty[$j]);
+    #my @vals = ($labs[$j], $WordQtys[$j], $allUnkQty[$j]);
+    my @vals = ($labs[$j]);
 
     for (my $k = 0; $k < @ModelResRef; ++$k) {
         push(@vals, $ModelResRef[$k]->[$j]);
