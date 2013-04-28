@@ -46,13 +46,12 @@ To reduce the risk of overfitting, we generated additional training and testing 
 \section{Introduction}
 Our group decided to focus on getting good performance with respect to the ``hard'' metric.
 We employed discriminative classifiers,
-because they are often superior to generative ones on the classification task. \leocomment{I have simplified here.}\cite{roni2013,bishop2007generative}.
+because they are often superior to generative ones on the classification task. \cite{roni2013,bishop2007generative}.
 \footnote{See also \url{http://xiaodong-yu.blogspot.com/2009/10/good-summary-on-generative-vs.html}.}
 To reduce the risk of overfitting, we generate additional training data and testing data.
 The details are given in subsequent sections. The individual contributions of team members are summarized in Table\ref{TableContrib}.
 
 
-\leocomment{Please, revise.}
 \begin{table}[H]
 \begin{tabular}{p{1in}|p{5in}}
 \hline
@@ -88,12 +87,13 @@ In addition, we tried several other feature types:
 \begin{itemize}
 \item \ngram models for sequences of POS tags. To this end, we applied the Stanford POS tagger
 to the Broadcast News corpus.
-\item language models based on word co-occurrences inside and across sentences.  \leocomment{Di, please, expand here.}
+\item language models based on word co-occurrences inside and across sentences.  
 
-\begin{wrapfigure}{l}{0.45\textwidth}\centering
-\includegraphics[scale=0.5]{./erroranalysisNPMI.png}
-\caption{Histogram of the avergage Normalized Pointwise Mutual Information (NPMI) computed over the\textbf{training} set.\label{FigNPMI}}
-\end{wrapfigure}
+%\begin{wrapfigure}{l}{0.45\textwidth}\centering
+%\includegraphics[scale=0.5]{./erroranalysisNPMI.png}
+%\caption{Histogram of the average Normalized Pointwise Mutual Information (NPMI) computed over 
+%the \textbf{training} set.\label{FigNPMI}}
+%\end{wrapfigure}
 
 \item the total number of words in a document and the number of words \texttt{<UNK>}.
 \end{itemize}
@@ -121,15 +121,14 @@ We also took a different approach to generating real data.
 It appears to us that the Broadcast News corpus contains complete documents, but their boundaries are not marked.
 To generate a document containing a desired number of
 words, we, thus, start from the beginning of a random sentence and select a contiguous sequence
-of words. Thus, generated documents contain long pieces of coherent text (with similar statistical properties).\leocomment{How does ``similar statistical properties'' sound?}
-For the reasons explained in section \ref{SectTrain}, \leocomment{I don't like forward references,
-but otherwise, it is hard to explain.}
-on average, a generated document is
-\textbf{2000 words longer} than  a document from the provided training set.
+of words. Thus, generated documents contain long pieces of coherent text (with similar statistical properties).
+For the reasons explained in section \ref{SectTrain}, on average, a generated document is
+2000 words longer than  a document from the provided training set.
 
 \subsection{Choosing and Training the Models}\label{SectTrain}
-\leocomment{Zhou, please, review and expand if necessary.} \zhoucomment{ add some changes }
-For the purpose of classification we use a soft-margin SVM with a linear kernel. liblinear \ref{REF08a} package is adopted in our experiments for its fast speed and reliable performance.
+For the purpose of classification we use a soft-margin SVM with a linear kernel. 
+More specifically, we employ the package LIBLINEAR,
+which is very efficient and reliable \ref{REF08a}.
 To produce posterior probability we train another discriminative model: a
 regularized logistic regression.
 Two regularization methods were tested: the LASSO and the Tikhonov regularization.
@@ -141,7 +140,7 @@ Additionally, we tested the SVM with the RBF kernel and a continuous Naive Bayes
 The RBF-based SVM was overfitting (despite we tried various margin coefficients and kernel widths).
 The Naive Bayes also performed badly (for unknown reason).
 
-The observed log-perplexity is an average value taken over log-perplexities of document \mbox{$n$-grams}. \leocomment{Please, proof-read this paragraph carefully! }
+The observed log-perplexity is an average value taken over log-perplexities of document \mbox{$n$-grams}. 
 We adopt a point of view that the log-perplexity is sampled from a random variable
 (or a parametric family of random variables).
 Thus, the average document log-perplexity is an MLE estimate of this random variable mean.
@@ -152,7 +151,11 @@ The shorter is a document, the higher is the variance of the mean estimates
 and, consequently, the harder it is for the model to ``guess'' true mean values.
 Hence, if a document length (or a number of words)
 is not included as a feature,
-models should produce better results when they are trained on longer documents.
+models could produce better results when they are trained on longer documents.
+These documents cannot be excessively long,
+because long spans of text in the Broadcast Corpus may contain multiple documents
+with very different properties.
+
 In particular, when we train and test on the same DEV set, we get much worse
 accuracy, then when we train on the training set and test on the DEV set!
 This is somewhat paradoxical, because the DEV set contains mostly short documents (around 100-200 words),
@@ -206,7 +209,7 @@ the 3-gram and the 4-gram models.
 As we can see from Figure~\ref{Fig1},
 in the training set,
 these two models alone separate the fake and real documents almost perfectly.
-Note, though, that for a development set, the ``clouds'' of real and fake documents have a considerable overlap.\leocomment{Di, did I get this correctly on the overlap for the DEV data?}
+Note, though, that for a development set, the ``clouds'' of real and fake documents have a considerable overlap.
  As explained in Section \ref{SectGen}, this is due to the fact that the training set
 contains only few short documents and, consequently, perplexity values have little variance due to random effects.
 
@@ -228,7 +231,7 @@ Our classifier performs better on long sentences (see Table~\ref{TableCorr}).
 For document containing only one sentence, we can detect fake sentences with $\approx 75\%$ accuracy
 for both the original and generated DEV sets.
 Exactly half of all documents are fake. Hence, we are doing much
-better than random guessing (by flipping a fair coin), which would get correctly only 50\% of documents.\leocomment{Guys, do you agree with this estimate?}
+better than random guessing (by flipping a fair coin), which would get correctly only 50\% of documents.
 For longer documents, the accuracy is mostly higher than 95\%.
 Yet, because documents having 1-2 sentences comprise 30\% of all DEV documents,
 it is hard to get the overall accuracy higher than 90\%.
@@ -246,8 +249,8 @@ Generated DEV     & 0.73 & 0.86 &  0.86 & 0.91 & 0.95  &   0.96&  0.99 &  1  &  
 Unlike the classification task, it is less clear whether the complete set of features is better or worse
 than the short set of features.
 According to Table~\ref{TablePerf}, the complete set of features performs better with a small training set.
-For the generated training set, the complete set of features is better only for the original DEV set,
-but the complete set performs worse for the generated DEV set.
+For the generated training set, the complete set of features is better only on the original DEV set,
+but it performs worse on the generated DEV set.
 Nevertheless, we chose the complete set,
 because the generated set was created by us and might have been less representative of the unseen test data.
 Note that Table~\ref{TablePerf} includes data only for the LASSO
@@ -261,10 +264,9 @@ the best method to estimate posterior probabilities.
 We also found that simple features: perplexities computed from \ngram models were sufficient to achieve good performance.
 All other approaches failed to produce better results.
 Interestingly enough, no single \ngram model is sufficient to distinguish between real from fake sentences.
-Yet, it is possible with perplexities computed only for the 3-gram and the 4-gram model. In that,
-the training data is (almost) linearly separable.
-Finally, we note that additional training data (generated by our team) allowed us to achieve better
-results on the DEV set, but it is not clear, of course, how well we perform on unseen data.
+Yet, detection is possible and accurate if two models are used (especially the 3-gram and the 4-gram model). 
+Finally, additional training data (generated by our team) allowed us to achieve better
+results on the DEV set.
 
 \bibliographystyle{plain}
 \bibliography{report}
