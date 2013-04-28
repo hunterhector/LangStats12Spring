@@ -1,5 +1,5 @@
 % 11-761 Language and Statistics
-% Assignment 3 
+% Assignment 3
 
 \pdfoutput=1
 \documentclass[11pt]{article}
@@ -17,10 +17,10 @@
 \newcommand{\ngram}{\mbox{$n$-gram }}
 \newcommand{\ngrams}{\mbox{$n$-grams }}
 
-\newcommand{\leocomment}[1]{\todo[color=red!40,caption={Leo's comment}]{#1}} 
-\newcommand{\hectcomment}[1]{\todo[color=green!40,caption={Hector's comment}]{#1}} 
-\newcommand{\dicomment}[1]{\todo[color=violet!40,caption={Di's comment}]{#1}} 
-\newcommand{\zhoucomment}[1]{\todo[color=blue!40,caption={Zhou's comment}]{#1}} 
+\newcommand{\leocomment}[1]{\todo[color=red!40,caption={Leo's comment}]{#1}}
+\newcommand{\hectcomment}[1]{\todo[color=green!40,caption={Hector's comment}]{#1}}
+\newcommand{\dicomment}[1]{\todo[color=violet!40,caption={Di's comment}]{#1}}
+\newcommand{\zhoucomment}[1]{\todo[color=blue!40,caption={Zhou's comment}]{#1}}
 
 \restylefloat{table}
 \restylefloat{figure}
@@ -34,7 +34,7 @@ Course Project}
 \maketitle
 
 \begin{abstract}
-We took a machine learning approach and trained two discriminative classifiers: 
+We took a machine learning approach and trained two discriminative classifiers:
 a soft-margin SVM and a regularized logistic regression.
 The SVM is used for classification, while the logistic regression is used to produce posterior probabilities.
 To reduce the risk of overfitting, we generated additional training and testing data.
@@ -45,7 +45,7 @@ To reduce the risk of overfitting, we generated additional training and testing 
 
 \section{Introduction}
 Our group decided to focus on getting good performance with respect to the ``hard'' metric.
-We employed discriminative classifiers, 
+We employed discriminative classifiers,
 because they are often superior to generative ones on the classification task. \leocomment{I have simplified here.}\cite{roni2013,bishop2007generative}.
 \footnote{See also \url{http://xiaodong-yu.blogspot.com/2009/10/good-summary-on-generative-vs.html}.}
 To reduce the risk of overfitting, we generate additional training data and testing data.
@@ -58,12 +58,12 @@ The details are given in subsequent sections. The individual contributions of te
 \hline
 Leo Boytsov &  Wrote code to produce features based on \ngram models (including models based on POS-tag sequence), generated additional training/testing data, and fine-tuned machine learning models;
 \\\hline
-Zhou You & Implemented and designed code for classification and computation of posterior probabilities;
+Zhou Yu & Implemented and designed code for classification and computation of posterior probabilities;
 \\\hline
 Di Wang & Tested additional features, in particular, based on word co-occurrences and
 carried out error analysis;
 \\\hline
-Hector Liu & Helped Leo to generate POS-tag based \ngram models, wrote a 
+Hector Liu & Helped Leo to generate POS-tag based \ngram models, wrote a
 reliable RunMe script that feeds language-model features to machine learning code
 and extracts results.
 \\\hline
@@ -75,20 +75,26 @@ in the report and the presentation.
 \caption{\label{TableContrib}Individual contributions of team members.}
 \end{table}
 
-\section{Training the Models} 
+\section{Training the Models}
 \subsection{Choosing Features} Because fake text was generated using a tri-gram model, we expected that
-higher order \ngram models ($n>3$) would have different perplexities on fake and real data. 
-Thus, perplexity values can be used as document features. 
+higher order \ngram models ($n>3$) would have different perplexities on fake and real data.
+Thus, perplexity values can be used as document features.
 
-The \ngram models were created with the help of the CMU-Cambridge toolkit\footnote{\url{http://svr-www.eng.cam.ac.uk/~prc14/toolkit.html}}.  The Broadcast News corpus was used for training. 
+The \ngram models were created with the help of the CMU-Cambridge toolkit\footnote{\url{http://svr-www.eng.cam.ac.uk/~prc14/toolkit.html}}.  The Broadcast News corpus was used for training.
 We employed six \ngram models ($2 \le n \le 7$), which were smoothed using the Good-Touring method.
 For $n>2$ the models included only \ngrams that occurred more than once (the larger is $n$, the larger is the cutoff value).
 
 In addition, we tried several other feature types:
 \begin{itemize}
-\item \ngram models for sequences of POS tags. To this end, we applied the Stanford POS tagger 
-to the Broadcast News corpus. 
+\item \ngram models for sequences of POS tags. To this end, we applied the Stanford POS tagger
+to the Broadcast News corpus.
 \item language models based on word co-occurrences inside and across sentences.  \leocomment{Di, please, expand here.}
+
+\begin{wrapfigure}{l}{0.45\textwidth}\centering
+\includegraphics[scale=0.5]{./erroranalysisNPMI.png}
+\caption{Histogram of the avergage Normalized Pointwise Mutual Information (NPMI) computed over the\textbf{training} set.\label{FigNPMI}}
+\end{wrapfigure}
+
 \item the total number of words in a document and the number of words \texttt{<UNK>}.
 \end{itemize}
 All these additional features were inferior to perplexities computed from the \ngram models.
@@ -98,34 +104,34 @@ to better classification accuracy.
 
 \subsection{Generating Additional Training/Testing Data}\label{SectGen}
 Because the CMU-Cambridge toolkit cannot generate data from a tri-gram model,
-we tried to employ the NLTK tookit (using Broadcast News corpus as a training set). 
+we tried to employ the NLTK tookit (using Broadcast News corpus as a training set).
 Unigrams not included in the tri-gram model (provided by instructors) were replaced by the word \texttt{<UNK>}.
 Real sentences were randomly sampled from the Broadcast News corpus.
 For both real and fake data, document lengths were chosen randomly to mimic distribution in the training data.
 Unfortunately, this data proved to be completely useless. The feature values for the generated data
 and the training set provided by instructors were substantially different.
 
-Then, we found that the CMU Sphinx toolkit\footnote{\url{http://cmusphinx.sourceforge.net/}} 
+Then, we found that the CMU Sphinx toolkit\footnote{\url{http://cmusphinx.sourceforge.net/}}
 included a version of the CMU-Cambridge toolkit capable of generating fake texts.
-However, we could not make the Sphinx toolkit read the provided binary language model (the \texttt{binlm}-file).\footnote{It complained that the model was corrupt.} Nor did the Sphinx toolkit 
+However, we could not make the Sphinx toolkit read the provided binary language model (the \texttt{binlm}-file).\footnote{It complained that the model was corrupt.} Nor did the Sphinx toolkit
 support generation from the text version of the language model (the \texttt{arpa}-file).
 Hence, we back-ported the generating function to the CMU-Cambridge toolkit.
 
-We also took a different approach to generating real data. 
-It appears to us that the Broadcast News corpus contains complete documents, but their boundaries are not marked. 
-To generate a document containing a desired number of 
+We also took a different approach to generating real data.
+It appears to us that the Broadcast News corpus contains complete documents, but their boundaries are not marked.
+To generate a document containing a desired number of
 words, we, thus, start from the beginning of a random sentence and select a contiguous sequence
 of words. Thus, generated documents contain long pieces of coherent text (with similar statistical properties).\leocomment{How does ``similar statistical properties'' sound?}
 For the reasons explained in section \ref{SectTrain}, \leocomment{I don't like forward references,
-but otherwise, it is hard to explain.} 
+but otherwise, it is hard to explain.}
 on average, a generated document is
 \textbf{2000 words longer} than  a document from the provided training set.
 
 \subsection{Choosing and Training the Models}\label{SectTrain}
-\leocomment{Zhou, please, review and expand if necessary.}
-For the purpose of classification we use a soft-margin SVM.
+\leocomment{Zhou, please, review and expand if necessary.} \zhoucomment{ add some changes }
+For the purpose of classification we use a soft-margin SVM with a linear kernel. liblinear \ref{REF08a} package is adopted in our experiments for its fast speed and reliable performance.
 To produce posterior probability we train another discriminative model: a
-regularized logistic regression. 
+regularized logistic regression.
 Two regularization methods were tested: the LASSO and the Tikhonov regularization.
 The soft metric cannot be computed, if any probability is zero,
 hence, posterior probabilities were smoothed.
@@ -159,9 +165,9 @@ Thus, one may consider this training set as being not representative.
 \multicolumn{8}{c}{\textbf{Original} DEV set} \\\hline\hline
 \multicolumn{4}{c|}{SVM performance } & \multicolumn{4}{c}{Logistic regression (LASSO) performance } \\
 \multicolumn{4}{c|}{(hard metric)} & \multicolumn{4}{c}{(soft metric/$2^{\mbox{soft metric}}$)} \\\hline\hline
-\multicolumn{2}{c|}{Original training set} & \multicolumn{2}{c|}{Generated training set} 
+\multicolumn{2}{c|}{Original training set} & \multicolumn{2}{c|}{Generated training set}
 &
-\multicolumn{2}{c|}{Original training set} & \multicolumn{2}{c}{Generated training set} 
+\multicolumn{2}{c|}{Original training set} & \multicolumn{2}{c}{Generated training set}
 \\\hline
 short & complete & short & complete  &
 short & complete & short & complete  \\
@@ -186,21 +192,21 @@ features & features & features & features \\\hline
 \section{Experiments}
 In addition, to the training and DEV sets provided by instructors,
 we used data generated by our team (see Section \ref{SectGen}).
-Our synthetic training and development sets include 10,000 and 2,000 documents, respectively. 
-Our experiments indicate that 
+Our synthetic training and development sets include 10,000 and 2,000 documents, respectively.
+Our experiments indicate that
 \ngram based features are superior to other features we tried.
 In particular, building \ngram models over sequences of POS tags was not helpful.
 
 We employed two sets of \ngram based features. The complete set includes perplexities for six \ngram models,
 but the short set employs only the 3-gram and the 4-gram models.
-When, we use only the provided training data, it does not hurt to include all features into the SVM 
-model (see Table~\ref{TablePerf}). As we get more training data, it may be better to use only 
-the 3-gram and the 4-gram models. 
+When, we use only the provided training data, it does not hurt to include all features into the SVM
+model (see Table~\ref{TablePerf}). As we get more training data, it may be better to use only
+the 3-gram and the 4-gram models.
 
 As we can see from Figure~\ref{Fig1},
 in the training set,
 these two models alone separate the fake and real documents almost perfectly.
-Note, though, that for a development set, the ``clouds'' of real and fake documents have a considerable overlap.\leocomment{Di, did I get this correctly on the overlap for the DEV data?} 
+Note, though, that for a development set, the ``clouds'' of real and fake documents have a considerable overlap.\leocomment{Di, did I get this correctly on the overlap for the DEV data?}
  As explained in Section \ref{SectGen}, this is due to the fact that the training set
 contains only few short documents and, consequently, perplexity values have little variance due to random effects.
 
@@ -221,7 +227,7 @@ Yet, this is possible with two models.
 Our classifier performs better on long sentences (see Table~\ref{TableCorr}).
 For document containing only one sentence, we can detect fake sentences with $\approx 75\%$ accuracy
 for both the original and generated DEV sets.
-Exactly half of all documents are fake. Hence, we are doing much 
+Exactly half of all documents are fake. Hence, we are doing much
 better than random guessing (by flipping a fair coin), which would get correctly only 50\% of documents.\leocomment{Guys, do you agree with this estimate?}
 For longer documents, the accuracy is mostly higher than 95\%.
 Yet, because documents having 1-2 sentences comprise 30\% of all DEV documents,
@@ -237,27 +243,27 @@ Generated DEV     & 0.73 & 0.86 &  0.86 & 0.91 & 0.95  &   0.96&  0.99 &  1  &  
 \end{tabular}
 \end{table}
 
-Unlike the classification task, it is less clear whether the complete set of features is better or worse 
-than the short set of features. 
+Unlike the classification task, it is less clear whether the complete set of features is better or worse
+than the short set of features.
 According to Table~\ref{TablePerf}, the complete set of features performs better with a small training set.
 For the generated training set, the complete set of features is better only for the original DEV set,
 but the complete set performs worse for the generated DEV set.
-Nevertheless, we chose the complete set, 
+Nevertheless, we chose the complete set,
 because the generated set was created by us and might have been less representative of the unseen test data.
 Note that Table~\ref{TablePerf} includes data only for the LASSO
 regularization, because the Tikhonov regularization was somewhat inferior (and is not presented here).
 
 \section{Conclusions}
-We took a machine learning approach and trained two discriminative classifiers. 
+We took a machine learning approach and trained two discriminative classifiers.
 The soft-margin SVM turned to be the best method for the classification task,
 while the logistic regression with the LASSO regularization was
-the best method to to estimate posterior probabilities.
+the best method to estimate posterior probabilities.
 We also found that simple features: perplexities computed from \ngram models were sufficient to achieve good performance.
 All other approaches failed to produce better results.
 Interestingly enough, no single \ngram model is sufficient to distinguish between real from fake sentences.
 Yet, it is possible with perplexities computed only for the 3-gram and the 4-gram model. In that,
 the training data is (almost) linearly separable.
-Finally, we note that additional training data (generated by our team) allowed us to achieve better 
+Finally, we note that additional training data (generated by our team) allowed us to achieve better
 results on the DEV set, but it is not clear, of course, how well we perform on unseen data.
 
 \bibliographystyle{plain}
