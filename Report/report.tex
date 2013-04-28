@@ -89,6 +89,12 @@ In addition, we tried several other feature types:
 \item \ngram models for sequences of POS tags. To this end, we applied the Stanford POS tagger
 to the Broadcast News corpus.
 \item language models based on word co-occurrences inside and across sentences.  \leocomment{Di, please, expand here.}
+
+\begin{wrapfigure}{l}{0.45\textwidth}\centering
+\includegraphics[scale=0.5]{./erroranalysisNPMI.png}
+\caption{Histogram of the avergage Normalized Pointwise Mutual Information (NPMI) computed over the\textbf{training} set.\label{FigNPMI}}
+\end{wrapfigure}
+
 \item the total number of words in a document and the number of words \texttt{<UNK>}.
 \end{itemize}
 All these additional features were inferior to perplexities computed from the \ngram models.
