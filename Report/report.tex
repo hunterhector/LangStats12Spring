@@ -76,8 +76,8 @@ in the report and the presentation.
 \section{Training the Models}
 \subsection{Choosing Features} 
 Fake documents were generated using a tri-gram model, 
-which is based on the histories of depth three.
-Hence, we expected that features computed over longer histories would be useful in distinguishing 
+i.e., they include three consecutive words.
+Hence, we expected that features computed over longer text spans would be useful in distinguishing 
 between fake and real documents.
 In particular, we employed 
 perplexities computed using higher order \ngram models ($n>3$).
